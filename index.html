@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        * {
+            text-align: center;
+            color: #444;
+        }
+        body {
+            background-color: #ccc;
+        }
+        .container {
+            background-color: whitesmoke;
+            height: 100vh;
+        }
+        .jumbotron {
+            background-image: url("stet.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 80%;
+            background-color: coral;
+            color: #fff;
+            text-shadow: 0px 0px 20px #fff;
+        }
+        h3 {
+            display: inline;
+        }
+        ul {
+            display: right;
+        }
+    </style>
+    <script>
+                function showGraph(param) {
+                    //document.getElementsByClassName("graph")[0].hidden = false;
+                    document.getElementById(param).hidden = true;
+                    
+                }
+
+        function compGraph() {
+
+            nom1 = document.getElementById("C1N").value;
+            denom1 = document.getElementById("C1D").value;
+            result1 = Math.floor((nom1 / denom1) * 100);
+            document.getElementById("PROG1").style.width = result1 + "%";
+            document.getElementById("PROG1").innerHTML = result1 + "%"
+
+            /*            nom2 = document.getElementById("C2N").value;
+            denom2 = document.getElementById("C2D").value;
+            result2 = Math.floor((nom2 / denom2) * 100);
+            document.getElementById("PROG2").style.width = result2 + "%";
+
+           
+            
+            html1 = document.getElementById("circles");
+            html1.innerHTML = "";
+
+            var i = 0;
+            var circle;
+            while (i < (result1 / 10)) {
+                circle = document.createElement("img");
+                circle.setAttribute("src", "redc.png");
+                html1.appendChild(circle);;
+                i++;
+            }
+            while (i < 10) {
+                circle = document.createElement("img");
+                circle.setAttribute("src", "grayc.png");
+                html1.appendChild(circle);;
+                i++;
+            }
+            */
+
+        }
+    </script>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Risk Visualizer</h1>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary">Progress Bar</button>
+                <button type="button" class="btn btn-primary" onclick="showGraph('circles')">Circles</button>
+                <button type="button" class="btn btn-primary">Humans</button>
+                <button type="button" class="btn btn-primary">Pie Chart</button>
+
+            </div>
+
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-xs-6">
+                <input id="C1N" placeholder="Cases" type="number">
+                <input id="C1D" placeholder="Population" type="number">
+            </div>
+            <div class="col-xs-6">
+                <!--PROGRESS BAR-->
+                <div class="progress graph">
+                    <div id="PROG1" class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">Risk</div>
+                </div>
+                <!--CIRCLES-->
+                <div class="graph" id="circles" hidden>
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                    <img src="grayc.png">
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <hr>
+        <div class="row">
+            <div class="col-xs-6">
+
+                <button type="button" class="btn btn-warning" onclick="delGraph()">-</button>
+                <button type="button" class="btn btn-warning" onclick="addGraph()">+</button>
+
+            </div>
+            <div class="col-xs-6">
+
+                <button type="button" class="btn btn-success" onclick="compGraph()">Compare</button>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <footer id="pagefooter">
+            <script>
+                document.getElementById("pagefooter").innerHTML = "<h5>&copy;  " + new Date().getFullYear() + " All rights reserved.</h5>";
+            </script>
+        </footer>
+
+
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+
