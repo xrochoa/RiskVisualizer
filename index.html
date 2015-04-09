@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <style>
         * {
             text-align: center;
@@ -30,49 +31,100 @@
         ul {
             display: right;
         }
+        .red {
+            color: #d9534f;
+        }
+        #b2g {
+            font-size: 200%;
+        }
+        #b3g {
+            font-size: 60%;
+        }
     </style>
     <script>
-                function showGraph(param) {
-                    //document.getElementsByClassName("graph")[0].hidden = false;
-                    document.getElementById(param).hidden = true;
-                    
+        $(document).ready(function() {
+            //TYPES OF GRAPHS FUNCTIONALITY
+            $(".graphbtn").click(function() {
+                $(".graph").hide();
+                switch (this.id) {
+                    case 'b1':
+                        $('#b1g').show();
+                        break;
+                    case 'b2':
+                        $('#b2g').show();
+                        break;
+                    case 'b3':
+                        $('#b3g').show();
+                        break;
+                    case 'b4':
+                        $('#b4g').show();
+                        break;
+                    default:
                 }
+            });
 
-        function compGraph() {
+            //COMPARE BUTTON
+            $("#compare").click(function() {
 
-            nom1 = document.getElementById("C1N").value;
-            denom1 = document.getElementById("C1D").value;
-            result1 = Math.floor((nom1 / denom1) * 100);
-            document.getElementById("PROG1").style.width = result1 + "%";
-            document.getElementById("PROG1").innerHTML = result1 + "%"
+                nom1 = $("#C1N").val();
+                denom1 = $("#C1D").val();
+                if (nom1 > denom1) {
+                    alert("Number of cases should be smaller than population.");
+                } else if (denom1 == 0) {
+                    alert("Please insert valid values.");
+                } else {
+                    result1 = Math.floor((nom1 / denom1) * 100);
 
-            /*            nom2 = document.getElementById("C2N").value;
-            denom2 = document.getElementById("C2D").value;
-            result2 = Math.floor((nom2 / denom2) * 100);
-            document.getElementById("PROG2").style.width = result2 + "%";
+                    //BAR RESULT
 
-           
-            
-            html1 = document.getElementById("circles");
-            html1.innerHTML = "";
+                    $("#BAR").css("width", result1 + "%");
+                    $("#BAR").html(result1 + "%");
 
-            var i = 0;
-            var circle;
-            while (i < (result1 / 10)) {
-                circle = document.createElement("img");
-                circle.setAttribute("src", "redc.png");
-                html1.appendChild(circle);;
-                i++;
+
+                    $("#b2g").empty();
+                    $("#b3g").empty();
+
+
+                    var i = 0;
+                    while (i < result1 / 10) {
+                        $("#b2g").append('<span class="glyphicon glyphicon-record red"></span>');
+
+
+                        i++;
+                    }
+                    while (i < 10) {
+                        $("#b2g").append('<span class="glyphicon glyphicon-record"></span>');
+
+                        i++;
+                    }
+
+                    i = 0;
+                    while (i < result1) {
+                        $("#b3g").append('<span class="glyphicon glyphicon-user red"></span>');
+
+
+                        i++;
+                    }
+                    while (i < 100) {
+                        $("#b3g").append('<span class="glyphicon glyphicon-user"></span>');
+
+                        i++;
+                    }
+
+                }
+            });
+            //INITIALIZE
+            $("#b1g").append('<div id="BAR" class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">Risk</div>');
+            for (i = 0; i < 10; i++) {
+                $("#b2g").append('<span class="glyphicon glyphicon-record"></span>');
             }
-            while (i < 10) {
-                circle = document.createElement("img");
-                circle.setAttribute("src", "grayc.png");
-                html1.appendChild(circle);;
-                i++;
+            for (i = 0; i < 100; i++) {
+                $("#b3g").append('<span class="glyphicon glyphicon-user"></span>');
             }
-            */
 
-        }
+
+
+        });
     </script>
 </head>
 
@@ -83,10 +135,10 @@
         <div class="jumbotron">
             <h1>Risk Visualizer</h1>
             <div class="btn-group">
-                <button type="button" class="btn btn-primary">Progress Bar</button>
-                <button type="button" class="btn btn-primary" onclick="showGraph('circles')">Circles</button>
-                <button type="button" class="btn btn-primary">Humans</button>
-                <button type="button" class="btn btn-primary">Pie Chart</button>
+                <button type="button" class="btn btn-primary graphbtn" id="b1">Progress Bar</button>
+                <button type="button" class="btn btn-primary graphbtn" id="b2">Circles</button>
+                <button type="button" class="btn btn-primary graphbtn" id="b3">Humans</button>
+                <button type="button" class="btn btn-primary graphbtn" id="b4">Pie Chart</button>
 
             </div>
 
@@ -99,22 +151,15 @@
             </div>
             <div class="col-xs-6">
                 <!--PROGRESS BAR-->
-                <div class="progress graph">
-                    <div id="PROG1" class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">Risk</div>
+                <div class="progress graph" id="b1g">
                 </div>
                 <!--CIRCLES-->
-                <div class="graph" id="circles" hidden>
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
-                    <img src="grayc.png">
+                <div class="graph" id="b2g" hidden>
                 </div>
+                <!--HUMANS-->
+                <div class="graph" id="b3g" hidden>
+                </div>
+
             </div>
 
         </div>
@@ -131,7 +176,7 @@
             </div>
             <div class="col-xs-6">
 
-                <button type="button" class="btn btn-success" onclick="compGraph()">Compare</button>
+                <button type="button" class="btn btn-success" id="compare">Compare</button>
             </div>
 
         </div>
