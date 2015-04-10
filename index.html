@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
     <style>
         * {
             text-align: center;
@@ -31,96 +32,245 @@
         ul {
             display: right;
         }
+        .btn-group {
+            width: 336px;
+        }
         .red {
             color: #d9534f;
         }
-        #b2g {
+        .circles {
             font-size: 200%;
+            min-width: 168px;
         }
-        #b3g {
+        .humans {
             font-size: 60%;
+            min-width: 168px;
         }
     </style>
     <script>
         $(document).ready(function() {
+
+            //INITIALIZE defaults
+            //CREATE AND DELETE DIVS
+
+
+            function addGraph() {
+                $(".graphdiv").append('<div class="row"><div class="col-xs-6"><input class="numerator" placeholder="Cases" type="number"><input class="denominator" placeholder="Population" type="number"></div><div class="col-xs-6"><!--PROGRESS BAR--><div class="progress graph barholder"></div><!--CIRCLES--><div class="graph circles" hidden></div><!--HUMANS--><div class="graph humans" hidden></div><!--PIE--><div class="graph pie" hidden></div></div></div><hr>'); //div creator
+            }
+
+
+            function delGraph() {
+                if ($(".graphdiv").children().length > 2) {
+                    $(".graphdiv").children().last().remove();
+                    $(".graphdiv").children().last().remove(); //div remover
+                };
+            }
+
+            function initGraph() {
+                $(".barholder").children().remove();
+                $(".barholder").append('<div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:100%">Risk</div>'); //bar
+                $(".circles").children().remove();
+
+                for (i = 0; i < 10; i++) {
+
+                    if (i == 5) {
+                        $(".circles").append('<br>');
+                    }
+                    $(".circles").append('<span class="glyphicon glyphicon-record"></span>'); //circles
+                }
+                $(".humans").children().remove();
+
+                for (i = 0; i < 100; i++) {
+                    if (i == 20 || i == 40 || i == 60 || i == 80) {
+                        $(".humans").append('<br>');
+                    }
+                    $(".humans").append('<span class="glyphicon glyphicon-user"></span>'); //humans
+                }
+
+                $(".pie").children().remove();
+                $(".pie").append('<canvas class="canvas" width="75" height="75">Please update your browser to support the canvas element.</canvas>'); //pie
+
+                for (p = 0; p < $(".pie").length; p++) {
+                    var canvas = document.getElementsByClassName("canvas")[p];
+                    var first = canvas.getContext("2d");
+                    var second = canvas.getContext("2d");
+                    var radius = canvas.width / 2;
+                    first.beginPath();
+                    first.arc(radius, radius, radius, 0, 0.5 * 2 * Math.PI);
+                    first.lineTo(radius, radius);
+                    first.fillStyle = "#d9534f";
+                    first.fill();
+                    second.beginPath();
+                    second.arc(radius, radius, radius, 0.5 * 2 * Math.PI, 2 * Math.PI);
+                    second.lineTo(radius, radius);
+                    second.fillStyle = "#5cb85c";
+                    second.fill();
+                }
+
+            }
+
+
+
             //TYPES OF GRAPHS FUNCTIONALITY
-            $(".graphbtn").click(function() {
+            function chooseGraph() {
+
                 $(".graph").hide();
-                switch (this.id) {
-                    case 'b1':
-                        $('#b1g').show();
+                switch (choice) {
+                    case 'barbtn':
+                        $('.barholder').show();
                         break;
-                    case 'b2':
-                        $('#b2g').show();
+                    case 'circlesbtn':
+                        $('.circles').show();
                         break;
-                    case 'b3':
-                        $('#b3g').show();
+                    case 'humansbtn':
+                        $('.humans').show();
                         break;
-                    case 'b4':
-                        $('#b4g').show();
+                    case 'piebtn':
+                        $('.pie').show();
                         break;
                     default:
                 }
-            });
+            }
+
 
             //COMPARE BUTTON
-            $("#compare").click(function() {
+            function compareGraph() {
 
-                nom1 = $("#C1N").val();
-                denom1 = $("#C1D").val();
-                if (nom1 > denom1) {
-                    alert("Number of cases should be smaller than population.");
-                } else if (denom1 == 0) {
-                    alert("Please insert valid values.");
-                } else {
-                    result1 = Math.floor((nom1 / denom1) * 100);
+                for (j = 0; j < $(".numerator").length; j++) {
 
-                    //BAR RESULT
+                    numerator = $(".numerator:nth(" + j + ")").val();
+                    denominator = $(".denominator:nth(" + j + ")").val();
+                    if (numerator > denominator) {
+                        $(".denominator:nth(" + j + ")").animate({
+                            backgroundColor: "#d9534f"
+                        }, 1000).animate({
+                            backgroundColor: "white"
+                        }, 1000);
+                    } else if (denominator == 0) {
+                        $(".numerator:nth(" + j + ")").animate({
+                            backgroundColor: "#d9534f"
+                        }, 1000).animate({
+                            backgroundColor: "white"
+                        }, 1000);
+                        $(".denominator:nth(" + j + ")").animate({
+                            backgroundColor: "#d9534f"
+                        }, 1000).animate({
+                            backgroundColor: "white"
+                        }, 1000);
+                    } else {
+                        result = Math.floor((numerator / denominator) * 100);
 
-                    $("#BAR").css("width", result1 + "%");
-                    $("#BAR").html(result1 + "%");
+                        //BAR RESULT
+
+                        $(".bar:nth(" + j + ")").css("width", result + "%");
+                        $(".bar:nth(" + j + ")").html(result + "%");
 
 
-                    $("#b2g").empty();
-                    $("#b3g").empty();
+                        $(".circles:nth(" + j + ")").empty(); //reset defaults
+                        $(".humans:nth(" + j + ")").empty();
+                        $(".pie:nth(" + j + ")").empty();
 
 
-                    var i = 0;
-                    while (i < result1 / 10) {
-                        $("#b2g").append('<span class="glyphicon glyphicon-record red"></span>');
+                        //CIRCLES RESULT
+
+                        var i = 0;
+                        while (i < result / 10) {
+                            if (i == 5) {
+                                $(".circles:nth(" + j + ")").append('<br>');
+                            }
+                            $(".circles:nth(" + j + ")").append('<span class="glyphicon glyphicon-record red"></span>');
 
 
-                        i++;
+                            i++;
+                        }
+                        while (i < 10) {
+                            if (i == 5) {
+                                $(".circles:nth(" + j + ")").append('<br>');
+                            }
+                            $(".circles:nth(" + j + ")").append('<span class="glyphicon glyphicon-record"></span>');
+
+                            i++;
+                        }
+
+                        //HUMAN RESULT
+
+
+                        i = 0;
+                        while (i < result) {
+                            if (i == 20 || i == 40 || i == 60 || i == 80) {
+                                $(".humans:nth(" + j + ")").append('<br>');
+                            }
+                            $(".humans:nth(" + j + ")").append('<span class="glyphicon glyphicon-user red"></span>');
+
+
+                            i++;
+                        }
+                        while (i < 100) {
+                            if (i == 20 || i == 40 || i == 60 || i == 80) {
+                                $(".humans:nth(" + j + ")").append('<br>');
+                            }
+                            $(".humans:nth(" + j + ")").append('<span class="glyphicon glyphicon-user"></span>');
+
+                            i++;
+                        }
+
+                        //PIE RESULT
+                        $(".pie:nth(" + j + ")").append('<canvas class="canvas" width="75" height="75">Please update your browser to support the canvas element.</canvas>');
+
+
+
+
+                        var canvas = document.getElementsByClassName("canvas")[j];
+                        var first = canvas.getContext("2d");
+                        var second = canvas.getContext("2d");
+                        var radius = canvas.width / 2;
+                        first.beginPath();
+                        first.arc(radius, radius, radius, 0, (result / 100) * 2 * Math.PI);
+                        first.lineTo(radius, radius);
+                        first.fillStyle = "#d9534f";
+                        first.fill();
+                        second.beginPath();
+                        second.arc(radius, radius, radius, (result / 100) * 2 * Math.PI, 2 * Math.PI);
+                        second.lineTo(radius, radius);
+                        second.fillStyle = "#5cb85c";
+                        second.fill();
+                
+
+
+
+
+
                     }
-                    while (i < 10) {
-                        $("#b2g").append('<span class="glyphicon glyphicon-record"></span>');
-
-                        i++;
-                    }
-
-                    i = 0;
-                    while (i < result1) {
-                        $("#b3g").append('<span class="glyphicon glyphicon-user red"></span>');
-
-
-                        i++;
-                    }
-                    while (i < 100) {
-                        $("#b3g").append('<span class="glyphicon glyphicon-user"></span>');
-
-                        i++;
-                    }
-
                 }
+            }
+
+
+
+            //CREATE AND DELETE DIVS
+            var choice = 'barbtn';
+
+            $("#addGraph").click(function() {
+                addGraph();
+                initGraph();
+                chooseGraph();
+
             });
-            //INITIALIZE
-            $("#b1g").append('<div id="BAR" class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">Risk</div>');
-            for (i = 0; i < 10; i++) {
-                $("#b2g").append('<span class="glyphicon glyphicon-record"></span>');
-            }
-            for (i = 0; i < 100; i++) {
-                $("#b3g").append('<span class="glyphicon glyphicon-user"></span>');
-            }
+            $("#delGraph").click(function() {
+                delGraph();
+            });
+
+            $("#compare").click(function() {
+                compareGraph();
+            });
+
+            $(".graphbtn").click(function() {
+                choice = this.id;
+                chooseGraph();
+            });
+
+            addGraph();
+            addGraph();
+            initGraph();
 
 
 
@@ -135,43 +285,20 @@
         <div class="jumbotron">
             <h1>Risk Visualizer</h1>
             <div class="btn-group">
-                <button type="button" class="btn btn-primary graphbtn" id="b1">Progress Bar</button>
-                <button type="button" class="btn btn-primary graphbtn" id="b2">Circles</button>
-                <button type="button" class="btn btn-primary graphbtn" id="b3">Humans</button>
-                <button type="button" class="btn btn-primary graphbtn" id="b4">Pie Chart</button>
-
+                <button type="button" class="btn btn-primary graphbtn" id="barbtn">Progress Bar</button>
+                <button type="button" class="btn btn-primary graphbtn" id="circlesbtn">Circles</button>
+                <button type="button" class="btn btn-primary graphbtn" id="humansbtn">Humans</button>
+                <button type="button" class="btn btn-primary graphbtn" id="piebtn">Pie Chart</button>
             </div>
-
         </div>
         <hr>
-        <div class="row">
-            <div class="col-xs-6">
-                <input id="C1N" placeholder="Cases" type="number">
-                <input id="C1D" placeholder="Population" type="number">
-            </div>
-            <div class="col-xs-6">
-                <!--PROGRESS BAR-->
-                <div class="progress graph" id="b1g">
-                </div>
-                <!--CIRCLES-->
-                <div class="graph" id="b2g" hidden>
-                </div>
-                <!--HUMANS-->
-                <div class="graph" id="b3g" hidden>
-                </div>
-
-            </div>
-
+        <div class="graphdiv">
         </div>
-
-
-
-        <hr>
         <div class="row">
             <div class="col-xs-6">
 
-                <button type="button" class="btn btn-warning" onclick="delGraph()">-</button>
-                <button type="button" class="btn btn-warning" onclick="addGraph()">+</button>
+                <button type="button" class="btn btn-warning" id="delGraph">-</button>
+                <button type="button" class="btn btn-warning" id="addGraph">+</button>
 
             </div>
             <div class="col-xs-6">
