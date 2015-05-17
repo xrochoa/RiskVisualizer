@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="app.js"></script>
+    <style>
+        .my-input {
+            -webkit-transition: all linear 0.5s;
+            transition: all linear 0.5s;
+        }
+        .my-input.ng-invalid {
+            color: white;
+            background: #D9534F;
+        }
+    </style>
+
+</head>
+
+<body ng-app="myApp">
+
+    <!--Title-->
+    <div class="container-fluid" ng-controller="myController">
+        <div class="jumbotron">
+            <h1>Risk Visualizer</h1>
+            <div class="btn-group">
+                <button type="button" class="btn btn-warning graphbtn" id="{{button | lowercase}}btn" ng-repeat="button in buttons" ng-click="clickSelect($index)">{{button}}{{$index}}</button>
+            </div>
+        </div>
+
+        <hr>
+        <!--Application-->
+        <div class="graphdiv" ng-repeat="div in divs">
+            <div class="row">
+                <div class="col-xs-6">
+                    <form name="myForm">
+                        <input class="my-input" type="number" placeholder="Cases" ng-model="numerators[$index]" ng-pattern="/^\d+$/">
+                        <input class="my-input" type="number" placeholder="Population" ng-model="denominators[$index]" ng-pattern="/^\d+$/" ng-maxlength="100000000">
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <!--PROGRESS BAR-->
+                    <div class="progress graph barholder" ng-show="selectedIndex==0"></div>
+                    <div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:{{result[$index] | number:0}}%">{{resultText[$index]}}</div>
+                    <!--CIRCLES-->
+                    <div class="graph circles" ng-show="selectedIndex==1">circle</div>
+                    <!--HUMANS-->
+                    <div class="graph humans" ng-show="selectedIndex==2">human</div>
+                    <!--PIE-->
+                    <div class="graph pie" ng-show="selectedIndex==3">pie</div>
+                    <!--dots-->
+                    <div class="graph pie" ng-show="selectedIndex==4">dots</div>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <button type="button" class="btn btn-success" id="delGraph" ng-click="delGraph()">-</button>
+                <button type="button" class="btn btn-success" id="addGraph" ng-click="addGraph()">+</button>
+            </div>
+            <div class="col-xs-6">
+                <button type="button" class="btn btn-success" id="compare" ng-click="compareGraph()">Compare</button>
+            </div>
+        </div>
+        <hr>
+        <footer id="pagefooter">
+            <h5>&copy; Risk Visualizer {{footerDate}}{{numerators}}{{denominators}}{{result}}{{resultText}}</h5>
+        </footer>
+
+
+    </div>
+
+
+
+
+
+    <input class="numerator" name="input1" placeholder="Cases" ng-minlength="10" ng-model="numerator">
+    <input class="denominator" name="input2" placeholder="Population" ng-minlength="5" ng-model="denominator">
+    <span class="error" ng-show="myForm.input1.$error.minlength">
+        at least 10 characters</span>
+    <span class="error" ng-show="myForm.input2.$error.minlength">
+        at least 5 characters</span>
+</body>
+
+</html>
+
+
+
+
+
