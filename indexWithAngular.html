@@ -27,7 +27,7 @@
         <div class="jumbotron">
             <h1>Risk Visualizer</h1>
             <div class="btn-group">
-                <button type="button" class="btn btn-warning graphbtn" id="{{button | lowercase}}btn" ng-repeat="button in buttons" ng-click="clickSelect($index)">{{button}}{{$index}}</button>
+                <button type="button" class="btn btn-warning graphbtn" id="{{button | lowercase}}btn" ng-repeat="button in buttons" ng-click="clickSelect($index)">{{button}}</button>
             </div>
         </div>
 
@@ -43,10 +43,14 @@
                 </div>
                 <div class="col-xs-6">
                     <!--PROGRESS BAR-->
-                    <div class="progress graph barholder" ng-show="selectedIndex==0"></div>
-                    <div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:{{result[$index] | number:0}}%">{{resultText[$index]}}</div>
+                    <div class="progress graph barholder" ng-show="selectedIndex==0">
+                        <div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:{{result[$index]}}%">{{resultText[$index]}}</div>
+                    </div>
+
                     <!--CIRCLES-->
-                    <div class="graph circles" ng-show="selectedIndex==1">circle</div>
+                    <div class="graph circles" ng-show="selectedIndex==1">
+                        <span class="glyphicon glyphicon-record" ng-repeat="circle in circles[$index] track by $index" ng-class="{'red': circle}"></span>
+                    </div>
                     <!--HUMANS-->
                     <div class="graph humans" ng-show="selectedIndex==2">human</div>
                     <!--PIE-->
@@ -59,16 +63,16 @@
         </div>
         <div class="row">
             <div class="col-xs-6">
-                <button type="button" class="btn btn-success" id="delGraph" ng-click="delGraph()">-</button>
-                <button type="button" class="btn btn-success" id="addGraph" ng-click="addGraph()">+</button>
+                <button type="button" class="btn btn-warning" id="delGraph" ng-click="delGraph()">-</button>
+                <button type="button" class="btn btn-warning" id="addGraph" ng-click="addGraph()">+</button>
             </div>
             <div class="col-xs-6">
-                <button type="button" class="btn btn-success" id="compare" ng-click="compareGraph()">Compare</button>
+                <button type="button" class="btn btn-warning" id="compare" ng-click="compareGraph()">Compare</button>
             </div>
         </div>
         <hr>
         <footer id="pagefooter">
-            <h5>&copy; Risk Visualizer {{footerDate}}{{numerators}}{{denominators}}{{result}}{{resultText}}</h5>
+            <h5>&copy; Risk Visualizer {{footerDate}}{{numerators}}{{denominators}}{{result}}{{resultText}}{{circles}}</h5>
         </footer>
 
 

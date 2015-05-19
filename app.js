@@ -1,8 +1,25 @@
 var app = angular.module("myApp", []);
 
 app.controller("myController", function($scope, $filter) {
+    //Initialize data
     $scope.buttons = ['Bar', 'Circles', 'People', 'Pie', 'Dots'];
     $scope.divs = [0, 1];
+    $scope.numerators = [null, null];
+    $scope.denominators = [null, null];
+    $scope.result = [100, 100];
+    $scope.resultText = ["Risk", "Risk"];
+    $scope.circles = {
+        0: [true, true, true, true, true, true, true, true, true, true],
+        1: [true, true, true, true, true, true, true, true, true, true]
+    };
+
+
+    //Select type of graph
+    $scope.selectedIndex = 0;
+    $scope.clickSelect = function(index) {
+        $scope.selectedIndex = index;
+    };
+
     $scope.delGraph = function() {
         if ($scope.divs.length > 2) {
             $scope.divs.pop();
@@ -10,38 +27,60 @@ app.controller("myController", function($scope, $filter) {
             $scope.resultText.pop();
             $scope.numerators.pop();
             $scope.denominators.pop();
+            delete $scope.circles[$scope.divs.length];
+
         };
     };
     $scope.addGraph = function() {
         $scope.divs.push($scope.divs.length);
         $scope.result.push(100);
         $scope.resultText.push("Risk");
+        $scope.numerators.push(null);
+        $scope.denominators.push(null);
+        $scope.circles[$scope.divs.length - 1] = [true, true, true, true, true, true, true, true, true, true];
+
 
     };
-    $scope.clickSelect = function(index) {
-        $scope.selectedIndex = index;
+
+    $scope.getTimes = function(n) {
+        return new Array(n);
     };
-    $scope.numerators = [];
-    $scope.denominators = [];
-
-    $scope.result = [100, 100];
-    $scope.resultText = ["Risk", "Risk"];
-
 
     $scope.compareGraph = function() {
+        //for each div input graph
         for (i = 0; i < $scope.divs.length; i++) {
-            $scope.result[i] = $filter('number')(($scope.numerators[i] / $scope.denominators[i]) * 100);
-            if ($scope.result[i] === null || $scope.result[i] === "") {
+            var temp = Math.round(($scope.numerators[i] / $scope.denominators[i]) * 100 * 1000000) / 1000000;
+
+            //Bar results
+            if (temp === null || temp === "") {
                 $scope.resultText[i] = "Check input";
                 $scope.result[i] = 100;
-            } else if ($scope.result[i] > 100) {
-                $scope.resultText[i] = "Population > Cases";
+            } else if (temp > 100) {
+                $scope.resultText[i] = "Population < Cases";
                 $scope.result[i] = 100;
-            } else if ($scope.result[i] >= 0 && $scope.result[i] <= 100) {
-                $scope.resultText[i] = $scope.result[i] + "%";
+            } else if (temp >= 0 && temp <= 100) {
+                $scope.resultText[i] = temp + "%";
+                //Circle results
+                $scope.circles[i] = [];
+                for (j = 0; j < 10; j++) {
+                    if (j < Math.round(temp / 10)) {
+                        $scope.circles[i][j] = true;
+                    } else {
+                        $scope.circles[i][j] = false;
+                    }
+                }
+            } else {
+                $scope.resultText[i] = "Check input";
+                $scope.result[i] = 100;
             }
+
+
+
+
+
         }
     };
+
 
 
     $scope.footerDate = new Date().getFullYear();
@@ -50,42 +89,8 @@ app.controller("myController", function($scope, $filter) {
 
 /*
 
- $scope.delGraph = function() {
-        if ($(".graphdiv").children().length > 2) {
-            $(".graphdiv").children().last().remove();
-            $(".graphdiv").children().last().remove(); //div remover
-        }
-    };
-   $scope.addGraph = function() {
-        $(".graphdiv").append('<div class="row"><div class="col-xs-6"><input class="numerator" placeholder="Cases" type="number"><input class="denominator" placeholder="Population" type="number"></div><div class="col-xs-6"><!--PROGRESS BAR--><div class="progress graph barholder"></div><!--CIRCLES--><div class="graph circles" hidden></div><!--HUMANS--><div class="graph humans" hidden></div><!--PIE--><div class="graph pie" hidden></div></div></div><hr>');
-    };
-    $scope.chooseGraph = function() {
-        $(".graph").hide();
-        switch (choice) {
-            case 'barbtn':
-                $('.barholder').show();
-                break;
-            case 'circlesbtn':
-                $('.circles').show();
-                break;
-            case 'humansbtn':
-                $('.humans').show();
-                break;
-            case 'piebtn':
-                $('.pie').show();
-                break;
-            default:
-        }
-    };
-    $scope.addGraphComp = function() {
-        $scope.addGraph();
-        $scope.initGraph();
-        $scope.chooseGraph();
-    };
-    $scope.initGraph = function() {
-        $(".barholder").children().remove();
-        $(".barholder").append('<div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:100%">Risk</div>'); //bar
-        $(".circles").children().remove();
+
+
 
         for (i = 0; i < 10; i++) {
 
