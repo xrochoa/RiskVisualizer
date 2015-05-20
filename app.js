@@ -8,10 +8,9 @@ app.controller("myController", function($scope, $filter) {
     $scope.denominators = [null, null];
     $scope.result = [100, 100];
     $scope.resultText = ["Risk", "Risk"];
-    $scope.circles = {
-        0: [true, true, true, true, true, true, true, true, true, true],
-        1: [true, true, true, true, true, true, true, true, true, true]
-    };
+    $scope.circles = {};
+    $scope.humans = {};
+    $scope.caca = 'que es esto';
 
 
     //Select type of graph
@@ -28,6 +27,8 @@ app.controller("myController", function($scope, $filter) {
             $scope.numerators.pop();
             $scope.denominators.pop();
             delete $scope.circles[$scope.divs.length];
+            delete $scope.humans[$scope.divs.length];
+
 
         };
     };
@@ -37,13 +38,11 @@ app.controller("myController", function($scope, $filter) {
         $scope.resultText.push("Risk");
         $scope.numerators.push(null);
         $scope.denominators.push(null);
-        $scope.circles[$scope.divs.length - 1] = [true, true, true, true, true, true, true, true, true, true];
+        $scope.circles[$scope.divs.length - 1] = $scope.returnLoopedArray(10, 100);
+        $scope.humans[$scope.divs.length - 1] = $scope.returnLoopedArray(100, 100);
 
 
-    };
 
-    $scope.getTimes = function(n) {
-        return new Array(n);
     };
 
     $scope.compareGraph = function() {
@@ -60,15 +59,9 @@ app.controller("myController", function($scope, $filter) {
                 $scope.result[i] = 100;
             } else if (temp >= 0 && temp <= 100) {
                 $scope.resultText[i] = temp + "%";
-                //Circle results
-                $scope.circles[i] = [];
-                for (j = 0; j < 10; j++) {
-                    if (j < Math.round(temp / 10)) {
-                        $scope.circles[i][j] = true;
-                    } else {
-                        $scope.circles[i][j] = false;
-                    }
-                }
+                $scope.result[i] = temp;
+                $scope.circles[i] = $scope.returnLoopedArray(10, temp / 10);
+                $scope.humans[i] = $scope.returnLoopedArray(100, temp);
             } else {
                 $scope.resultText[i] = "Check input";
                 $scope.result[i] = 100;
@@ -79,15 +72,86 @@ app.controller("myController", function($scope, $filter) {
 
 
         }
+
     };
 
+    $scope.returnLoopedArray = function(numberOfItems, roundedValue) {
+        var loopedArray = [];
+        for (j = 0; j < numberOfItems; j++) {
+            if (j < Math.round(roundedValue)) {
+                loopedArray[j] = true;
+            } else {
+                loopedArray[j] = false;
+            }
+        }
+        return loopedArray
+    };
+
+    //initialize some stuff
+    $scope.circles[0] = $scope.returnLoopedArray(10, 100);
+    $scope.circles[1] = $scope.returnLoopedArray(10, 100);
+    $scope.humans[0] = $scope.returnLoopedArray(100, 100);
+    $scope.humans[1] = $scope.returnLoopedArray(100, 100);
 
 
     $scope.footerDate = new Date().getFullYear();
 
+
+    /*
+        var radius = canvas.width / 2;
+        first.beginPath();
+        first.arc(radius, radius, radius, 0, 0.5 * 2 * Math.PI);
+        first.lineTo(radius, radius);
+        first.fillStyle = "#d9534f";
+        first.fill();
+        second.beginPath();
+        second.arc(radius, radius, radius, 0.5 * 2 * Math.PI, 2 * Math.PI);
+        second.lineTo(radius, radius);
+        second.fillStyle = "#5cb85c";
+        second.fill();*/
+
+
 });
 
-/*
+
+
+app.directive("canvaspie", function() {
+        return {
+            restrict: 'E',
+            transclude: true,
+            scope: {
+                data: '=',
+            },
+            controller: function($scope, $element) {
+                console.log();
+
+            },
+            replace: true,
+            link: function(scope, element, attrs) {
+                scope.$watch('data', function() {
+                        var canvas = element[0];
+                        var first = canvas.getContext("2d");
+                        var second = canvas.getContext("2d");
+                        var radius = canvas.width / 2;
+                        first.beginPath();
+                        first.arc(radius, radius, radius, 0, (scope.data / 100) * 2 * Math.PI);
+                        first.lineTo(radius, radius);
+                        first.fillStyle = "#d9534f";
+                        first.fill();
+                        second.beginPath();
+                        second.arc(radius, radius, radius, (scope.data / 100) * 2 * Math.PI, 2 * Math.PI);
+                        second.lineTo(radius, radius);
+                        second.fillStyle = "#444444";
+                        second.fill();
+                    })
+
+                },
+
+                template: "<canvas class='canvas' width='75' height='75' ng-transclude></canvas>"
+            }
+        });
+
+    /*
 
 
 

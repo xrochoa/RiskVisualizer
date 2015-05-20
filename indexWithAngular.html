@@ -52,9 +52,13 @@
                         <span class="glyphicon glyphicon-record" ng-repeat="circle in circles[$index] track by $index" ng-class="{'red': circle}"></span>
                     </div>
                     <!--HUMANS-->
-                    <div class="graph humans" ng-show="selectedIndex==2">human</div>
+                    <div class="graph humans" ng-show="selectedIndex==2">
+                        <span class="glyphicon glyphicon-user" ng-repeat="human in humans[$index] track by $index" ng-class="{'red': human}"></span>
+                    </div>
                     <!--PIE-->
-                    <div class="graph pie" ng-show="selectedIndex==3">pie</div>
+                    <div class="graph pie" ng-show="selectedIndex==3">
+                        <canvaspie data="result[$index]">Please update your browser to support the canvas element.</canvaspie>
+                    </div>
                     <!--dots-->
                     <div class="graph pie" ng-show="selectedIndex==4">dots</div>
                 </div>
@@ -72,7 +76,7 @@
         </div>
         <hr>
         <footer id="pagefooter">
-            <h5>&copy; Risk Visualizer {{footerDate}}{{numerators}}{{denominators}}{{result}}{{resultText}}{{circles}}</h5>
+            <h5>&copy; Risk Visualizer {{footerDate}}</h5>
         </footer>
 
 
@@ -81,13 +85,13 @@
 
 
 
-
+<!--
     <input class="numerator" name="input1" placeholder="Cases" ng-minlength="10" ng-model="numerator">
     <input class="denominator" name="input2" placeholder="Population" ng-minlength="5" ng-model="denominator">
     <span class="error" ng-show="myForm.input1.$error.minlength">
         at least 10 characters</span>
     <span class="error" ng-show="myForm.input2.$error.minlength">
-        at least 5 characters</span>
+        at least 5 characters</span>-->
 </body>
 
 </html>
