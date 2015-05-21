@@ -25,12 +25,15 @@
     <!--Title-->
     <div class="container-fluid" ng-controller="myController">
         <div class="jumbotron">
-            <h1>Risk Visualizer</h1>
+            <h1>Risk Visualizer</h1><br>
             <div class="btn-group">
-                <button type="button" class="btn btn-warning graphbtn" id="{{button | lowercase}}btn" ng-repeat="button in buttons" ng-click="clickSelect($index)">{{button}}</button>
+                <button type="button" class="btn btn-warning graphbtn" title="{{buttonsDescription[$index]}}" ng-class="{active:selectedIndex==$index}" id="{{button | lowercase}}btn" ng-repeat="button in buttons" ng-click="clickSelect($index)">{{button}}</button>
             </div>
-        </div>
 
+        </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-purple graphbtn btn-xs" title="Magnify times {{zoom}}" ng-class="{active:selectedZoom==$index}" id="{{button | lowercase}}btn" ng-repeat="zoom in zooms" ng-click="clickZoom($index); compareGraph()"><span class="glyphicon glyphicon-search white"></span> {{zoom}}x</button>
+            </div>
         <hr>
         <!--Application-->
         <div class="graphdiv" ng-repeat="div in divs">
@@ -50,6 +53,11 @@
                     <!--CIRCLES-->
                     <div class="graph circles" ng-show="selectedIndex==1">
                         <span class="glyphicon glyphicon-record" ng-repeat="circle in circles[$index] track by $index" ng-class="{'red': circle}"></span>
+                        
+                        <br ng-if="$index==4">                    <!--OOOOOJJJJJOOO-->
+
+                        
+                        
                     </div>
                     <!--HUMANS-->
                     <div class="graph humans" ng-show="selectedIndex==2">
@@ -60,7 +68,9 @@
                         <canvaspie data="result[$index]">Please update your browser to support the canvas element.</canvaspie>
                     </div>
                     <!--dots-->
-                    <div class="graph pie" ng-show="selectedIndex==4">dots</div>
+                    <div class="graph pie" ng-show="selectedIndex==4">
+                        <canvasdots data="result[$index]">Please update your browser to support the canvas element.</canvasdots>
+                    </div>
                 </div>
             </div>
             <hr>
@@ -85,7 +95,7 @@
 
 
 
-<!--
+    <!--
     <input class="numerator" name="input1" placeholder="Cases" ng-minlength="10" ng-model="numerator">
     <input class="denominator" name="input2" placeholder="Population" ng-minlength="5" ng-model="denominator">
     <span class="error" ng-show="myForm.input1.$error.minlength">

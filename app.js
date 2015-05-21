@@ -2,7 +2,9 @@ var app = angular.module("myApp", []);
 
 app.controller("myController", function($scope, $filter) {
     //Initialize data
-    $scope.buttons = ['Bar', 'Circles', 'People', 'Pie', 'Dots'];
+    $scope.buttons = ['Bar', 'Circles', 'People', 'Pie', 'Pixels'];
+    $scope.buttonsDescription = ['Percentage Bar', '10 Circles', '100 People', 'Pie Chart', '10000 Pixels in a Square'];
+    $scope.zooms = [1, 10, 100, 1000, 10000, 100000];
     $scope.divs = [0, 1];
     $scope.numerators = [null, null];
     $scope.denominators = [null, null];
@@ -10,13 +12,17 @@ app.controller("myController", function($scope, $filter) {
     $scope.resultText = ["Risk", "Risk"];
     $scope.circles = {};
     $scope.humans = {};
-    $scope.caca = 'que es esto';
 
 
     //Select type of graph
     $scope.selectedIndex = 0;
     $scope.clickSelect = function(index) {
         $scope.selectedIndex = index;
+    };
+
+    $scope.selectedZoom = 0;
+    $scope.clickZoom = function(index) {
+        $scope.selectedZoom = index;
     };
 
     $scope.delGraph = function() {
@@ -49,6 +55,7 @@ app.controller("myController", function($scope, $filter) {
         //for each div input graph
         for (i = 0; i < $scope.divs.length; i++) {
             var temp = Math.round(($scope.numerators[i] / $scope.denominators[i]) * 100 * 1000000) / 1000000;
+            tempX = temp * $scope.zooms[$scope.selectedZoom];
 
             //Bar results
             if (temp === null || temp === "") {
@@ -59,9 +66,9 @@ app.controller("myController", function($scope, $filter) {
                 $scope.result[i] = 100;
             } else if (temp >= 0 && temp <= 100) {
                 $scope.resultText[i] = temp + "%";
-                $scope.result[i] = temp;
-                $scope.circles[i] = $scope.returnLoopedArray(10, temp / 10);
-                $scope.humans[i] = $scope.returnLoopedArray(100, temp);
+                $scope.result[i] = tempX;
+                $scope.circles[i] = $scope.returnLoopedArray(10, tempX / 10);
+                $scope.humans[i] = $scope.returnLoopedArray(100, tempX);
             } else {
                 $scope.resultText[i] = "Check input";
                 $scope.result[i] = 100;
@@ -96,215 +103,76 @@ app.controller("myController", function($scope, $filter) {
 
     $scope.footerDate = new Date().getFullYear();
 
-
-    /*
-        var radius = canvas.width / 2;
-        first.beginPath();
-        first.arc(radius, radius, radius, 0, 0.5 * 2 * Math.PI);
-        first.lineTo(radius, radius);
-        first.fillStyle = "#d9534f";
-        first.fill();
-        second.beginPath();
-        second.arc(radius, radius, radius, 0.5 * 2 * Math.PI, 2 * Math.PI);
-        second.lineTo(radius, radius);
-        second.fillStyle = "#5cb85c";
-        second.fill();*/
-
-
 });
 
 
 
 app.directive("canvaspie", function() {
-        return {
-            restrict: 'E',
-            transclude: true,
-            scope: {
-                data: '=',
-            },
-            controller: function($scope, $element) {
-                console.log();
-
-            },
-            replace: true,
-            link: function(scope, element, attrs) {
-                scope.$watch('data', function() {
-                        var canvas = element[0];
-                        var first = canvas.getContext("2d");
-                        var second = canvas.getContext("2d");
-                        var radius = canvas.width / 2;
-                        first.beginPath();
-                        first.arc(radius, radius, radius, 0, (scope.data / 100) * 2 * Math.PI);
-                        first.lineTo(radius, radius);
-                        first.fillStyle = "#d9534f";
-                        first.fill();
-                        second.beginPath();
-                        second.arc(radius, radius, radius, (scope.data / 100) * 2 * Math.PI, 2 * Math.PI);
-                        second.lineTo(radius, radius);
-                        second.fillStyle = "#444444";
-                        second.fill();
-                    })
-
-                },
-
-                template: "<canvas class='canvas' width='75' height='75' ng-transclude></canvas>"
-            }
-        });
-
-    /*
-
-
-
-
-        for (i = 0; i < 10; i++) {
-
-            if (i == 5) {
-                $(".circles").append('<br>');
-            }
-            $(".circles").append('<span class="glyphicon glyphicon-record"></span>'); //circles
-        }
-        $(".humans").children().remove();
-
-        for (i = 0; i < 100; i++) {
-            if (i == 20 || i == 40 || i == 60 || i == 80) {
-                $(".humans").append('<br>');
-            }
-            $(".humans").append('<span class="glyphicon glyphicon-user"></span>'); //humans
-        }
-
-        $(".pie").children().remove();
-        $(".pie").append('<canvas class="canvas" width="75" height="75">Please update your browser to support the canvas element.</canvas>'); //pie
-
-        for (p = 0; p < $(".pie").length; p++) {
-            var canvas = document.getElementsByClassName("canvas")[p];
-            var first = canvas.getContext("2d");
-            var second = canvas.getContext("2d");
-            var radius = canvas.width / 2;
-            first.beginPath();
-            first.arc(radius, radius, radius, 0, 0.5 * 2 * Math.PI);
-            first.lineTo(radius, radius);
-            first.fillStyle = "#d9534f";
-            first.fill();
-            second.beginPath();
-            second.arc(radius, radius, radius, 0.5 * 2 * Math.PI, 2 * Math.PI);
-            second.lineTo(radius, radius);
-            second.fillStyle = "#5cb85c";
-            second.fill();
-        }
-
-    };
-    
-    
-    
-    
-    $scope.compareGraph = function() {
-
-        for (j = 0; j < $(".numerator").length; j++) {
-
-            numerator = $(".numerator:nth(" + j + ")").val();
-            denominator = $(".denominator:nth(" + j + ")").val();
-            if (numerator > denominator) {
-                $(".denominator:nth(" + j + ")").animate({
-                    backgroundColor: "#d9534f"
-                }, 1000).animate({
-                    backgroundColor: "white"
-                }, 1000);
-            } else if (denominator == 0) {
-                $(".numerator:nth(" + j + ")").animate({
-                    backgroundColor: "#d9534f"
-                }, 1000).animate({
-                    backgroundColor: "white"
-                }, 1000);
-                $(".denominator:nth(" + j + ")").animate({
-                    backgroundColor: "#d9534f"
-                }, 1000).animate({
-                    backgroundColor: "white"
-                }, 1000);
-            } else {
-                result = Math.floor((numerator / denominator) * 100);
-
-                //BAR RESULT
-
-                $(".bar:nth(" + j + ")").css("width", result + "%");
-                $(".bar:nth(" + j + ")").html(result + "%");
-
-
-                $(".circles:nth(" + j + ")").empty(); //reset defaults
-                $(".humans:nth(" + j + ")").empty();
-                $(".pie:nth(" + j + ")").empty();
-
-
-                //CIRCLES RESULT
-
-                var i = 0;
-                while (i < result / 10) {
-                    if (i == 5) {
-                        $(".circles:nth(" + j + ")").append('<br>');
-                    }
-                    $(".circles:nth(" + j + ")").append('<span class="glyphicon glyphicon-record red"></span>');
-
-
-                    i++;
-                }
-                while (i < 10) {
-                    if (i == 5) {
-                        $(".circles:nth(" + j + ")").append('<br>');
-                    }
-                    $(".circles:nth(" + j + ")").append('<span class="glyphicon glyphicon-record"></span>');
-
-                    i++;
-                }
-
-                //HUMAN RESULT
-
-
-                i = 0;
-                while (i < result) {
-                    if (i == 20 || i == 40 || i == 60 || i == 80) {
-                        $(".humans:nth(" + j + ")").append('<br>');
-                    }
-                    $(".humans:nth(" + j + ")").append('<span class="glyphicon glyphicon-user red"></span>');
-
-
-                    i++;
-                }
-                while (i < 100) {
-                    if (i == 20 || i == 40 || i == 60 || i == 80) {
-                        $(".humans:nth(" + j + ")").append('<br>');
-                    }
-                    $(".humans:nth(" + j + ")").append('<span class="glyphicon glyphicon-user"></span>');
-
-                    i++;
-                }
-
-                //PIE RESULT
-                $(".pie:nth(" + j + ")").append('<canvas class="canvas" width="75" height="75">Please update your browser to support the canvas element.</canvas>');
-
-
-
-
-                var canvas = document.getElementsByClassName("canvas")[j];
+    return {
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            data: '=',
+        },
+        replace: true,
+        link: function(scope, element, attrs) {
+            scope.$watch('data', function() {
+                var canvas = element[0];
                 var first = canvas.getContext("2d");
-                var second = canvas.getContext("2d");
+                first.clearRect(0, 0, canvas.width, canvas.height);
+                first.clearRect(0, 0, canvas.width, canvas.height);
                 var radius = canvas.width / 2;
                 first.beginPath();
-                first.arc(radius, radius, radius, 0, (result / 100) * 2 * Math.PI);
+                first.arc(radius, radius, radius, 0, (scope.data / 100) * 2 * Math.PI);
                 first.lineTo(radius, radius);
                 first.fillStyle = "#d9534f";
                 first.fill();
-                second.beginPath();
-                second.arc(radius, radius, radius, (result / 100) * 2 * Math.PI, 2 * Math.PI);
-                second.lineTo(radius, radius);
-                second.fillStyle = "#5cb85c";
-                second.fill();
+                first.beginPath();
+                first.arc(radius, radius, radius, (scope.data / 100) * 2 * Math.PI, 2 * Math.PI);
+                first.lineTo(radius, radius);
+                first.fillStyle = "#444444";
+                first.fill();
+            })
 
+        },
 
-
-
-
-
-            }
-        }
+        template: "<canvas class='canvas' width='75' height='75' ng-transclude></canvas>"
     }
-    
-    */
+});
+
+app.directive("canvasdots", function() {
+    return {
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            data: '=',
+        },
+        replace: true,
+        link: function(scope, element, attrs) {
+            scope.$watch('data', function() {
+                var canvas = element[0];
+                var first = canvas.getContext("2d");
+                first.clearRect(0, 0, canvas.width, canvas.height);
+                first.beginPath();
+                first.strokeStyle = '#d9534f';
+                var valor = (scope.data / 100) * 10000;
+                var square = Math.round(Math.sqrt(valor));
+
+                for (y = 0; y < square; y++) {
+                    for (x = 0; x < square; x++) {
+                        if (valor > 0) {
+                            first.lineTo(x, y);
+                            valor--;
+                        }
+                    }
+                }
+                first.stroke();
+
+
+            })
+
+        },
+
+        template: "<canvas class='canvas barholder' width='99' height='99' ng-transclude></canvas>"
+    }
+});

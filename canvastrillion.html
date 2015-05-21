@@ -73,8 +73,8 @@
             valor = (yar * 10000) / xar;
             var square = Math.floor(Math.sqrt(valor));
 
-            for (y = 0; y < 100; y++) {
-                for (x = 0; x < 100; x++) {
+            for (y = 0; y < square; y++) {
+                for (x = 0; x < square; x++) {
                     if (valor > 0) {
                         first.lineTo(x, y);
                         valor--;
