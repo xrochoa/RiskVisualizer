@@ -50,6 +50,12 @@ gulp.task('images', function () {
     .pipe(gulp.dest('dist/img'));
 });
 
+// Copy favicon
+gulp.task('fav', function () {
+    return gulp.src('favicon.ico')
+    .pipe(gulp.dest('dist'));
+});
+
 //Replacing local links with CDNs and minify index.html
 gulp.task('cdn', function () {
     return gulp.src("index.html")
@@ -93,5 +99,5 @@ gulp.task('watch', function () {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'scripts', 'css', 'cdn', 'images',
+gulp.task('default', ['lint', 'scripts', 'css', 'cdn', 'images', 'fav',
     'watch']);
