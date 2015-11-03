@@ -1,0 +1,24 @@
+{
+  "name": "riskvisualizer",
+  "version": "1.0.0",
+  "description": "Responsive web app to visualize health risk",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xrochoa/RiskVisualizer.git"
+  },
+  "keywords": [
+    "angular",
+    "bootstrap",
+    "canvas"
+  ],
+  "author": "Xavi Ro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xrochoa/RiskVisualizer/issues"
+  },
+  "homepage": "https://github.com/xrochoa/RiskVisualizer#readme"
+}

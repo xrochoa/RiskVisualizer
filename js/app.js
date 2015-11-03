@@ -1,10 +1,11 @@
-var app = angular.module("myApp", []);
-
-app.controller("myController", function($scope, $filter) {
+var app = angular.module("RiskVisualizer", ['ui.bootstrap'])
+.controller("RiskVisualizerCtrl", ['$scope', function($scope) {
     //Initialize data
     $scope.buttons = ['Bar', 'Circles', 'People', 'Pie', 'Pixels'];
-    $scope.buttonsDescription = ['Percentage Bar', '10 Circles', '100 People', 'Pie Chart', '10000 Pixels in a Square'];
+    $scope.buttonsDescription = ['Percentage Bar', '10 Circles', '100 People', 'Pie Chart', '10,000 Pixels in a Square'];
     $scope.zooms = [1, 10, 100, 1000, 10000, 100000];
+    $scope.zoomsText = ['No zoom', 'Zoom ten times', 'Zoom a hundred times', 'Zoom a thousand times', 'Zoom ten thousand times', 'Zoom a hundred thousand times'];
+    $scope.zoomsEnabled = [true, false, false, false, false, false];
     $scope.divs = [0, 1];
     $scope.numerators = [null, null];
     $scope.denominators = [null, null];
@@ -36,7 +37,7 @@ app.controller("myController", function($scope, $filter) {
             delete $scope.humans[$scope.divs.length];
 
 
-        };
+        }
     };
     $scope.addGraph = function() {
         $scope.divs.push($scope.divs.length);
@@ -52,17 +53,23 @@ app.controller("myController", function($scope, $filter) {
     };
 
     $scope.compareGraph = function() {
+        
+        //Enable zooms
+        $scope.zoomsEnabled = [true, false, false, false, false, false];
+        var tempArray = [];
+        
         //for each div input graph
         for (i = 0; i < $scope.divs.length; i++) {
             var temp = Math.round(($scope.numerators[i] / $scope.denominators[i]) * 100 * 1000000) / 1000000;
+            tempArray.push(temp);
             tempX = temp * $scope.zooms[$scope.selectedZoom];
-
+            
             //Bar results
-            if (temp === null || temp === "") {
-                $scope.resultText[i] = "Check input";
+            if (($scope.denominators[i] === null) || ($scope.denominators[i] === "")) {
+                $scope.resultText[i] = "Please enter values";
                 $scope.result[i] = 100;
             } else if (temp > 100) {
-                $scope.resultText[i] = "Population < Cases";
+                $scope.resultText[i] = "Population must be > Cases";
                 $scope.result[i] = 100;
             } else if (temp >= 0 && temp <= 100) {
                 $scope.resultText[i] = temp + "%";
@@ -70,9 +77,25 @@ app.controller("myController", function($scope, $filter) {
                 $scope.circles[i] = $scope.returnLoopedArray(10, tempX / 10);
                 $scope.humans[i] = $scope.returnLoopedArray(100, tempX);
             } else {
-                $scope.resultText[i] = "Check input";
+                $scope.resultText[i] = "Please fix values";
                 $scope.result[i] = 100;
             }
+            
+            //calculates max value at the end and changes zoom
+            if (i === ($scope.divs.length-1)) {
+                
+                var maxTemp = Math.max.apply(null, tempArray);
+                
+            //http://stackoverflow.com/questions/6665997/switch-statement-for-greater-than-less-than
+            if (maxTemp <= 10) { $scope.zoomsEnabled[1] = true; }
+            if (maxTemp <= 1) { $scope.zoomsEnabled[2] = true; }
+            if (maxTemp <= 0.1) { $scope.zoomsEnabled[3] = true; }
+            if (maxTemp <= 0.01) { $scope.zoomsEnabled[4] = true; }
+            if (maxTemp <= 0.001) { $scope.zoomsEnabled[5] = true; }
+                
+                
+            }
+
 
 
 
@@ -91,7 +114,7 @@ app.controller("myController", function($scope, $filter) {
                 loopedArray[j] = false;
             }
         }
-        return loopedArray
+        return loopedArray;
     };
 
     //initialize some stuff
@@ -103,11 +126,8 @@ app.controller("myController", function($scope, $filter) {
 
     $scope.footerDate = new Date().getFullYear();
 
-});
-
-
-
-app.directive("canvaspie", function() {
+}])
+.directive("canvaspie", function() {
     return {
         restrict: 'E',
         transclude: true,
@@ -132,15 +152,14 @@ app.directive("canvaspie", function() {
                 first.lineTo(radius, radius);
                 first.fillStyle = "#444444";
                 first.fill();
-            })
+            });
 
         },
 
         template: "<canvas class='canvas' width='75' height='75' ng-transclude></canvas>"
-    }
-});
-
-app.directive("canvasdots", function() {
+    };
+})
+.directive("canvasdots", function() {
     return {
         restrict: 'E',
         transclude: true,
@@ -169,10 +188,10 @@ app.directive("canvasdots", function() {
                 first.stroke();
 
 
-            })
+            });
 
         },
 
         template: "<canvas class='canvas barholder' width='99' height='99' ng-transclude></canvas>"
-    }
+    };
 });

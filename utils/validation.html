@@ -1,0 +1,6 @@
+    <input class="numerator" name="input1" placeholder="Cases" ng-minlength="10" ng-model="numerator">
+    <input class="denominator" name="input2" placeholder="Population" ng-minlength="5" ng-model="denominator">
+    <span class="error" ng-show="myForm.input1.$error.minlength">
+        at least 10 characters</span>
+    <span class="error" ng-show="myForm.input2.$error.minlength">
+        at least 5 characters</span>

@@ -2,326 +2,132 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-    <style>
-        * {
-            text-align: center;
-            color: #444;
-        }
-        body {
-            background-color: white;
-        }
-        .container {
-            background-color: whitesmoke;
-            height: 100vh;
-        }
-        .jumbotron {
-            background-image: url("stet.png");
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: 80%;
-            background-color: coral;
-            color: #fff;
-            text-shadow: 0px 0px 20px #fff;
-        }
-        h3 {
-            display: inline;
-        }
-        ul {
-            display: right;
-        }
-        .btn-group {
-        }
-        .red {
-            color: #d9534f;
-        }
-        .circles {
-            font-size: 200%;
-        }
-        .humans {
-            font-size: 60%;
-        }
-    </style>
-    <script>
-        $(document).ready(function() {
 
-            //INITIALIZE defaults
-            //CREATE AND DELETE DIVS
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <title>Risk Visualizer</title>
 
-            function addGraph() {
-                $(".graphdiv").append('<div class="row"><div class="col-xs-6"><input class="numerator" placeholder="Cases" type="number"><input class="denominator" placeholder="Population" type="number"></div><div class="col-xs-6"><!--PROGRESS BAR--><div class="progress graph barholder"></div><!--CIRCLES--><div class="graph circles" hidden></div><!--HUMANS--><div class="graph humans" hidden></div><!--PIE--><div class="graph pie" hidden></div></div></div><hr>'); //div creator
-            }
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
+    <!-- Bootstrap -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-            function delGraph() {
-                if ($(".graphdiv").children().length > 2) {
-                    $(".graphdiv").children().last().remove();
-                    $(".graphdiv").children().last().remove(); //div remover
-                };
-            }
+    <!-- Google Font, Custom CSS -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:600|Nunito' rel='stylesheet' type='text/css'>
+    <link href="css/style.css" rel="stylesheet">
 
-            function initGraph() {
-                $(".barholder").children().remove();
-                $(".barholder").append('<div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:100%">Risk</div>'); //bar
-                $(".circles").children().remove();
+    <!-- Angular -->
+    <script src="bower_components/angular/angular.min.js"></script>
 
-                for (i = 0; i < 10; i++) {
+    <!-- Angular Bootstrap UI -->
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
-                    if (i == 5) {
-                        $(".circles").append('<br>');
-                    }
-                    $(".circles").append('<span class="glyphicon glyphicon-record"></span>'); //circles
-                }
-                $(".humans").children().remove();
-
-                for (i = 0; i < 100; i++) {
-                    if (i == 20 || i == 40 || i == 60 || i == 80) {
-                        $(".humans").append('<br>');
-                    }
-                    $(".humans").append('<span class="glyphicon glyphicon-user"></span>'); //humans
-                }
-
-                $(".pie").children().remove();
-                $(".pie").append('<canvas class="canvas" width="75" height="75">Please update your browser to support the canvas element.</canvas>'); //pie
-
-                for (p = 0; p < $(".pie").length; p++) {
-                    var canvas = document.getElementsByClassName("canvas")[p];
-                    var first = canvas.getContext("2d");
-                    var second = canvas.getContext("2d");
-                    var radius = canvas.width / 2;
-                    first.beginPath();
-                    first.arc(radius, radius, radius, 0, 0.5 * 2 * Math.PI);
-                    first.lineTo(radius, radius);
-                    first.fillStyle = "#d9534f";
-                    first.fill();
-                    second.beginPath();
-                    second.arc(radius, radius, radius, 0.5 * 2 * Math.PI, 2 * Math.PI);
-                    second.lineTo(radius, radius);
-                    second.fillStyle = "#5cb85c";
-                    second.fill();
-                }
-
-            }
-
-
-
-            //TYPES OF GRAPHS FUNCTIONALITY
-            function chooseGraph() {
-
-                $(".graph").hide();
-                switch (choice) {
-                    case 'barbtn':
-                        $('.barholder').show();
-                        break;
-                    case 'circlesbtn':
-                        $('.circles').show();
-                        break;
-                    case 'humansbtn':
-                        $('.humans').show();
-                        break;
-                    case 'piebtn':
-                        $('.pie').show();
-                        break;
-                    default:
-                }
-            }
-
-
-            //COMPARE BUTTON
-            function compareGraph() {
-
-                for (j = 0; j < $(".numerator").length; j++) {
-
-                    numerator = $(".numerator:nth(" + j + ")").val();
-                    denominator = $(".denominator:nth(" + j + ")").val();
-                    if (numerator > denominator) {
-                        $(".denominator:nth(" + j + ")").animate({
-                            backgroundColor: "#d9534f"
-                        }, 1000).animate({
-                            backgroundColor: "white"
-                        }, 1000);
-                    } else if (denominator == 0) {
-                        $(".numerator:nth(" + j + ")").animate({
-                            backgroundColor: "#d9534f"
-                        }, 1000).animate({
-                            backgroundColor: "white"
-                        }, 1000);
-                        $(".denominator:nth(" + j + ")").animate({
-                            backgroundColor: "#d9534f"
-                        }, 1000).animate({
-                            backgroundColor: "white"
-                        }, 1000);
-                    } else {
-                        result = Math.floor((numerator / denominator) * 100);
-
-                        //BAR RESULT
-
-                        $(".bar:nth(" + j + ")").css("width", result + "%");
-                        $(".bar:nth(" + j + ")").html(result + "%");
-
-
-                        $(".circles:nth(" + j + ")").empty(); //reset defaults
-                        $(".humans:nth(" + j + ")").empty();
-                        $(".pie:nth(" + j + ")").empty();
-
-
-                        //CIRCLES RESULT
-
-                        var i = 0;
-                        while (i < result / 10) {
-                            if (i == 5) {
-                                $(".circles:nth(" + j + ")").append('<br>');
-                            }
-                            $(".circles:nth(" + j + ")").append('<span class="glyphicon glyphicon-record red"></span>');
-
-
-                            i++;
-                        }
-                        while (i < 10) {
-                            if (i == 5) {
-                                $(".circles:nth(" + j + ")").append('<br>');
-                            }
-                            $(".circles:nth(" + j + ")").append('<span class="glyphicon glyphicon-record"></span>');
-
-                            i++;
-                        }
-
-                        //HUMAN RESULT
-
-
-                        i = 0;
-                        while (i < result) {
-                            if (i == 20 || i == 40 || i == 60 || i == 80) {
-                                $(".humans:nth(" + j + ")").append('<br>');
-                            }
-                            $(".humans:nth(" + j + ")").append('<span class="glyphicon glyphicon-user red"></span>');
-
-
-                            i++;
-                        }
-                        while (i < 100) {
-                            if (i == 20 || i == 40 || i == 60 || i == 80) {
-                                $(".humans:nth(" + j + ")").append('<br>');
-                            }
-                            $(".humans:nth(" + j + ")").append('<span class="glyphicon glyphicon-user"></span>');
-
-                            i++;
-                        }
-
-                        //PIE RESULT
-                        $(".pie:nth(" + j + ")").append('<canvas class="canvas" width="75" height="75">Please update your browser to support the canvas element.</canvas>');
-
-
-
-
-                        var canvas = document.getElementsByClassName("canvas")[j];
-                        var first = canvas.getContext("2d");
-                        var second = canvas.getContext("2d");
-                        var radius = canvas.width / 2;
-                        first.beginPath();
-                        first.arc(radius, radius, radius, 0, (result / 100) * 2 * Math.PI);
-                        first.lineTo(radius, radius);
-                        first.fillStyle = "#d9534f";
-                        first.fill();
-                        second.beginPath();
-                        second.arc(radius, radius, radius, (result / 100) * 2 * Math.PI, 2 * Math.PI);
-                        second.lineTo(radius, radius);
-                        second.fillStyle = "#5cb85c";
-                        second.fill();
-
-
-
-
-
-
-                    }
-                }
-            }
-
-
-
-            //CREATE AND DELETE DIVS
-            var choice = 'barbtn';
-
-            $("#addGraph").click(function() {
-                addGraph();
-                initGraph();
-                chooseGraph();
-
-            });
-            $("#delGraph").click(function() {
-                delGraph();
-            });
-
-            $("#compare").click(function() {
-                compareGraph();
-            });
-
-            $(".graphbtn").click(function() {
-                choice = this.id;
-                chooseGraph();
-            });
-
-            addGraph();
-            addGraph();
-            initGraph();
-
-
-
-        });
-    </script>
 </head>
 
-<body>
+<body ng-app="RiskVisualizer">
 
+    <!--Controller-->
+    <div class="container-fluid" ng-controller="RiskVisualizerCtrl">
 
-    <div class="container-fluid">
+        <!--Header-->
         <div class="jumbotron">
             <h1>Risk Visualizer</h1>
+            <br>
+            
+            <!--Graph buttons-->
             <div class="btn-group">
-                <button type="button" class="btn btn-primary graphbtn" id="barbtn">Bar</button>
-                <button type="button" class="btn btn-primary graphbtn" id="circlesbtn">Circles</button>
-                <button type="button" class="btn btn-primary graphbtn" id="humansbtn">People</button>
-                <button type="button" class="btn btn-primary graphbtn" id="piebtn">Pie</button>
+                <button type="button" class="btn btn-warning graphbtn" ng-class="{active:selectedIndex==$index}" id="{{button | lowercase}}btn" ng-repeat="button in buttons" ng-click="clickSelect($index)"><span uib-tooltip="{{buttonsDescription[$index]}} Graph">{{button}}</span></button>
             </div>
         </div>
-        <hr>
-        <div class="graphdiv">
+
+        <!--Zoom buttons-->
+        <div class="btn-group">
+            <button type="button" class="btn btn-purple graphbtn btn-xs" ng-class="{active:selectedZoom==$index, disabled:!zoomsEnabled[$index]}" id="{{button | lowercase}}btn" ng-repeat="zoom in zooms" ng-click="clickZoom($index); compareGraph()"><span uib-tooltip="{{zoomsText[$index]}}"><span class="glyphicon glyphicon-search white"></span> {{zoom | number}}x</span>
+            </button>
         </div>
+
+        <hr>
+
+        <!--GRAPHS-->
+        <div class="graphdiv" ng-repeat="div in divs">
+            <div class="row">
+                <div class="col-xs-6">
+                    <form name="myForm">
+                        <input class="my-input col-md-6 col-xs-12" type="number" placeholder="Cases" ng-model="numerators[$index]" ng-pattern="/^\d+$/"/>
+                        <input class="my-input col-md-6 col-xs-12" type="number" placeholder="Population" ng-model="denominators[$index]" ng-pattern="/^\d+$/" ng-maxlength="100000000"/>
+                    </form>
+                </div>
+                <div class="col-xs-6">
+                    <!--PROGRESS BAR-->
+                    <div class="progress graph barholder" ng-show="selectedIndex==0">
+                        <div class="progress-bar progress-bar-danger bar" role="progressbar" style="width:{{result[$index]}}%">{{resultText[$index]}}</div>
+                    </div>
+
+                    <!--CIRCLES-->
+                    <div class="graph circles" ng-show="selectedIndex==1">
+                        <span ng-repeat="circle in circles[$index] track by $index">
+                                <img ng-src="img/redc.png" ng-if="circle"/>
+                                <img ng-src="img/grayc.png" ng-if="!circle"/>
+                                <br ng-if="!(($index + 1) % 5)" />
+                                </span>
+                        <h5 class="red">{{resultText[$index]}}</h5>
+                    </div>
+
+                    <!--HUMANS-->
+                    <div class="graph humans" ng-show="selectedIndex==2">
+                        <span ng-repeat="human in humans[$index] track by $index">
+                        <span class="glyphicon glyphicon-user" ng-class="{'red': human, 'gray': !human}"></span>
+                        <br ng-if="!(($index + 1) % 10)" />
+                        </span>
+                        <h5 class="red">{{resultText[$index]}}</h5>
+
+                    </div>
+
+                    <!--PIE-->
+                    <div class="graph pie" ng-show="selectedIndex==3">
+                        <canvaspie data="result[$index]">Please update your browser to support the canvas element.</canvaspie>
+                        <h5 class="red">{{resultText[$index]}}</h5>
+                    </div>
+
+                    <!--DOTS-->
+                    <div class="graph pie" ng-show="selectedIndex==4">
+                        <canvasdots data="result[$index]">Please update your browser to support the canvas element.</canvasdots>
+                        <h5 class="red">{{resultText[$index]}}</h5>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <!-- Compare Buttons -->
         <div class="row">
             <div class="col-xs-6">
-
-                <button type="button" class="btn btn-warning" id="delGraph">-</button>
-                <button type="button" class="btn btn-warning" id="addGraph">+</button>
-
+                <button type="button" class="btn btn-purple" id="delGraph" ng-click="delGraph()">-</button>
+                <button type="button" class="btn btn-purple" id="addGraph" ng-click="addGraph()">+</button>
             </div>
             <div class="col-xs-6">
-
-                <button type="button" class="btn btn-success" id="compare">Compare</button>
+                <button type="button" class="btn btn-warning" id="compare" ng-click="clickZoom(0); compareGraph()">Compare</button>
             </div>
-
         </div>
 
         <hr>
 
+        <!-- Footer -->
         <footer id="pagefooter">
-            <script>
-                document.getElementById("pagefooter").innerHTML = "<h5>&copy;  " + new Date().getFullYear() + " All rights reserved.</h5>";
-            </script>
+            <h5>Kindra Clark-Snustad Risk Visualizer</h5>
+            <h5>Developed by <a href="http://www.xaviro.com">Xavi Ro</a> &copy; {{footerDate}}</h5>
         </footer>
 
 
     </div>
 
+    <!-- Custom Javascript -->
+    <script src="js/app.js"></script>
+
 </body>
 
 </html>
-
-
-
-
-

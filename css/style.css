@@ -1,0 +1,126 @@
+* {
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+    color: #444;
+}
+
+body {
+    background: radial-gradient(#fffcf2, #ECE9E2);
+}
+
+.container {
+    background-color: whitesmoke;
+    height: 100vh;
+}
+
+.jumbotron {
+    background: radial-gradient(#652b7c, #502b7c);
+    color: #fff;
+    text-shadow: 0 0 20px #b575de;
+}
+
+h3 {
+    display: inline;
+}
+
+ul {
+    display: right;
+}
+
+.red {
+    color: #d9534f;
+}
+
+.humans {
+    font-size: 60%;
+}
+
+.gray {
+    color: #444444;
+}
+
+hr {
+    border-color: #B7A57A;
+}
+
+.barholder {
+    background-color: #444444;
+}
+
+.white,
+.white a {
+    color: #fff;
+}
+
+.btn-purple {
+    color: #FFFFFF;
+    background-color: #8556a8;
+    border-color: #70488E;
+}
+
+.btn-purple:hover,
+.btn-purple:focus,
+.btn-purple:active,
+.btn-purple.active,
+.open .dropdown-toggle.btn-purple {
+    color: #FFFFFF;
+    background-color: #5A2B7C;
+    border-color: #8556a8;
+}
+
+.btn-purple:active,
+.btn-purple.active,
+.open .dropdown-toggle.btn-purple {
+    background-image: none;
+}
+
+.btn-purple.disabled,
+.btn-purple[disabled],
+fieldset[disabled] .btn-purple,
+.btn-purple.disabled:hover,
+.btn-purple[disabled]:hover,
+fieldset[disabled] .btn-purple:hover,
+.btn-purple.disabled:focus,
+.btn-purple[disabled]:focus,
+fieldset[disabled] .btn-purple:focus,
+.btn-purple.disabled:active,
+.btn-purple[disabled]:active,
+fieldset[disabled] .btn-purple:active,
+.btn-purple.disabled.active,
+.btn-purple[disabled].active,
+fieldset[disabled] .btn-purple.active {
+    background-color: #a78bbe;
+    border-color: #70488E;
+}
+
+.btn-purple .badge {
+    color: #A991BE;
+    background-color: #FFFFFF;
+}
+
+.my-input {
+    transition: background linear 0.5s;
+}
+
+.my-input.ng-invalid {
+    color: white;
+    background: #D9534F;
+}
+
+
+/* BUTTONS */
+
+span {
+    color: #fff;
+}
+
+
+/* FOOTER */
+
+footer a:hover {
+    text-decoration: none;
+}
+.humans span {
+    width: 1rem;
+    height: 1rem;
+}
